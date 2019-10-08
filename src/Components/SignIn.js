@@ -5,6 +5,7 @@ import * as firebaseui from 'firebaseui'
 import firebase from 'firebase';
 import configureStore from '../Store/configureStore.js'
 import { getUid, getUsername} from '../Actions/user';
+import { connect } from 'react-redux';
 
 // Configure Firebase.
 var firebaseConfig = {
@@ -62,7 +63,6 @@ export default function SignIn (props){
                 // console.log('run signed in functions')
                 const user = firebase.auth().currentUser;
                 // // use this UID to search/create database
-                console.log(user)
                 store.dispatch(getUid(user));
                 store.dispatch(getUsername(user));
             }
@@ -86,4 +86,3 @@ export default function SignIn (props){
         </div>
     );
 }
-
