@@ -1,4 +1,5 @@
 const initialState = {
+    isSignedIn: false,
     uid: 0,
     name: ''
 };
@@ -7,6 +8,9 @@ const initialState = {
 // reducer gets passed to createStore (configureStore.js), retaining the data reducers return
 const usersReducer = (state = initialState, action) => {
     switch (action.type) {
+        case 'SET_SIGN_IN':
+            return Object.assign({}, state, {isSignedIn: action.user})
+        
         case 'GET_UID':
             //merges empty object with previous state and adds new property, do not mutate
             return Object.assign({}, state, {uid: action.uid})

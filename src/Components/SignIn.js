@@ -6,8 +6,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import * as firebaseui from 'firebaseui'
 import firebase from 'firebase';
 import configureStore from '../Store/configureStore.js'
-import { getUid, getUsername} from '../Actions/user';
-import { connect } from 'react-redux';
+import { getUid, getUsername, setSignedIn} from '../Actions/user';
 
 // Configure Firebase.
 const firebaseConfig = config.firebaseConfig;
@@ -32,26 +31,26 @@ const uiConfig = {
     }
 };
 
-
 const store = configureStore();
-const state = store.getState();
 
 export default function SignIn (props){
+    
+    const [ isSignedIn, toggleSignedIn ] = useState(false);
 
-    const [ isSignedIn, setSignedIn ] = useState(false);
     useEffect(() => {
-
         
         // if not signed in - route to home
         // if signed in - route to dashboard
             //refer to redirect docs - put the route in app router
         // state of signedin must be managed across two components
 
-        
         firebase.auth().onAuthStateChanged( user => {
 
-            //get rid of local state and if statement?
-            setSignedIn(!!user);
+            // need to update state locally
+                // the setter causes side-effect (updates state) which invokes useEffect and trigger re-render (login vs logout)
+                // if auth listener is outside of useEffect, the below 'login render' will not be able to access redux's state before running the if statement
+            toggleSignedIn(!!user);
+            store.dispatch(setSignedIn(!!user));
             
             if(isSignedIn){
                 // console.log('run signed in functions')
@@ -59,6 +58,11 @@ export default function SignIn (props){
                 // // use this UID to search/create database
                 store.dispatch(getUid(user));
                 store.dispatch(getUsername(user));
+            } else {
+                // no parameters result in undefined - trigger default value in the action's parameters
+                // to clear logged out user info
+                store.dispatch(getUid());
+                store.dispatch(getUsername());
             }
         })
     })
