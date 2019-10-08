@@ -1,3 +1,5 @@
+//hide config - config file is in git ignore but imported here
+import { config } from '../config';
 import React, {useState, useEffect} from 'react';
 //https://github.com/firebase/firebaseui-web-react
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -8,15 +10,7 @@ import { getUid, getUsername} from '../Actions/user';
 import { connect } from 'react-redux';
 
 // Configure Firebase.
-var firebaseConfig = {
-    apiKey: "AIzaSyAYHYUa64-1nCyhaNAG2wGv9Kbxuh87Fng",
-    authDomain: "split-bill-dluudevs.firebaseapp.com",  
-    databaseURL: "https://split-bill-dluudevs.firebaseio.com",
-    projectId: "split-bill-dluudevs",
-    storageBucket: "",
-    messagingSenderId: "509238630511",
-    appId: "1:509238630511:web:5e686a434673365ce2959a"
-};
+const firebaseConfig = config.firebaseConfig;
 
 firebase.initializeApp(firebaseConfig);
 const url = window.location.href;
@@ -56,8 +50,8 @@ export default function SignIn (props){
         
         firebase.auth().onAuthStateChanged( user => {
 
+            //get rid of local state and if statement?
             setSignedIn(!!user);
-            console.log('auth state changed. isSignedIn: ' + isSignedIn)
             
             if(isSignedIn){
                 // console.log('run signed in functions')
